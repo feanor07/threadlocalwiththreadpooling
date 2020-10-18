@@ -6,11 +6,11 @@ import com.dilek.alptug.threadlocalwiththreadpooling.model.DeveloperTaskCountBre
 import com.dilek.alptug.threadlocalwiththreadpooling.repository.DeveloperRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-@Service
+@Component
 @Qualifier("not-optimized-developerTaskAssignment-mapper")
 public class DefaultDeveloperTaskAssignmentMapper implements DeveloperTaskAssignmentMapper {
     private final DeveloperRepository developerRepository;

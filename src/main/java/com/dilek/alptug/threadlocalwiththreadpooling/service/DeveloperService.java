@@ -17,15 +17,18 @@ public class DeveloperService {
     private final DeveloperTaskAssignmentMapper notOptimizedMapper;
     private final DeveloperTaskAssignmentMapper threadLocalOptimizedMapper;
     private final DeveloperTaskAssignmentMapper servletRequestListenerMapper;
+    private final DeveloperTaskAssignmentMapper requestScopedMapper;
 
     public DeveloperService(@Autowired DeveloperRepository developerRepository,
                             @Autowired @Qualifier("not-optimized-developerTaskAssignment-mapper") DeveloperTaskAssignmentMapper notOptimizedMapper,
                             @Autowired @Qualifier("thread-local-optimized-developerTaskAssignment-mapper") DeveloperTaskAssignmentMapper threadLocalOptimizedMapper,
-                            @Autowired @Qualifier("servlet-request-listener-developerTaskAssignment-mapper") DeveloperTaskAssignmentMapper servletRequestListenerMapper) {
+                            @Autowired @Qualifier("servlet-request-listener-developerTaskAssignment-mapper") DeveloperTaskAssignmentMapper servletRequestListenerMapper,
+                            @Autowired @Qualifier("request-scoped-developerTaskAssignment-mapper") DeveloperTaskAssignmentMapper requestScopedMapper) {
         this.developerRepository = developerRepository;
         this.notOptimizedMapper = notOptimizedMapper;
         this.threadLocalOptimizedMapper = threadLocalOptimizedMapper;
         this.servletRequestListenerMapper = servletRequestListenerMapper;
+        this.requestScopedMapper = requestScopedMapper;
     }
 
     public List<Developer> getAllDevelopers() {
@@ -42,6 +45,10 @@ public class DeveloperService {
 
     public List<DeveloperTaskAssignmentDTO> getTaskBreakdownViaServletRequestListenerMapper() {
         return developerRepository.getAllDevelopers().stream().map(servletRequestListenerMapper::mapDeveloper).collect(Collectors.toList());
+    }
+
+    public List<DeveloperTaskAssignmentDTO> getTaskBreakdownViaRequestScopedMapper() {
+        return developerRepository.getAllDevelopers().stream().map(requestScopedMapper::mapDeveloper).collect(Collectors.toList());
     }
 
     public Integer assignTask(long developerId) {

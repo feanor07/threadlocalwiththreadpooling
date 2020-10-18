@@ -6,19 +6,24 @@ import com.dilek.alptug.threadlocalwiththreadpooling.model.DeveloperTaskCountBre
 import com.dilek.alptug.threadlocalwiththreadpooling.repository.DeveloperRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.Optional;
 
 @Component
-@Qualifier("thread-local-optimized-developerTaskAssignment-mapper")
-public class ThreadLocalOptimizedDeveloperTaskAssignmentMapper implements DeveloperTaskAssignmentMapper {
-    private static final ThreadLocal<List<DeveloperTaskCountBreakdown>> DEVELOPER_TASK_ASSIGNMENTS = new ThreadLocal<>();
+@Qualifier("request-scoped-developerTaskAssignment-mapper")
+@Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
+public class RequestScopedDeveloperTaskAssignmentMapper implements DeveloperTaskAssignmentMapper {
+
+    private List<DeveloperTaskCountBreakdown> allDevelopersTaskBreakdown;
 
     private final DeveloperRepository developerRepository;
 
-    public ThreadLocalOptimizedDeveloperTaskAssignmentMapper(@Autowired DeveloperRepository developerRepository) {
+    public RequestScopedDeveloperTaskAssignmentMapper(@Autowired DeveloperRepository developerRepository) {
         this.developerRepository = developerRepository;
     }
 
@@ -32,11 +37,8 @@ public class ThreadLocalOptimizedDeveloperTaskAssignmentMapper implements Develo
     }
 
     private List<DeveloperTaskCountBreakdown> getAllDevelopersTaskBreakdown() {
-        List<DeveloperTaskCountBreakdown> allDevelopersTaskBreakdown = DEVELOPER_TASK_ASSIGNMENTS.get();
-
         if (allDevelopersTaskBreakdown == null) {
             allDevelopersTaskBreakdown = developerRepository.getDeveloperTaskBreakdown();
-            DEVELOPER_TASK_ASSIGNMENTS.set(allDevelopersTaskBreakdown);
         }
 
         return allDevelopersTaskBreakdown;

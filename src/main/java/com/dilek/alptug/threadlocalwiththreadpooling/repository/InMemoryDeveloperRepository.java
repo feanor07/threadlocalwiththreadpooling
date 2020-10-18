@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class InMemoryDeveloperRepository implements DeveloperRepository {
     private static final int INITIAL_DEVELOPER_TASK_COUNT = 5;
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final List<Developer> DEVELOPERS = Arrays.asList(new Developer(1L, "Alptug", "Dilek", Title.FULLSTACK_DEVELOPER),
             new Developer(2L, "John", "Doe", Title.BACKEND_DEVELOPER),
@@ -28,7 +28,7 @@ public class InMemoryDeveloperRepository implements DeveloperRepository {
 
     @Override
     public List<DeveloperTaskCountBreakdown> getDeveloperTaskBreakdown() {
-        logger.info("Fetching task breakdown for all developers via thread " + Thread.currentThread().getId());
+        logger.info("Fetching task breakdown for all developers");
 
         return DEVELOPER_TASK_COUNT_MAP.entrySet().stream().map((entry) -> new DeveloperTaskCountBreakdown(
                 entry.getKey(), entry.getValue())).collect(Collectors.toList());
