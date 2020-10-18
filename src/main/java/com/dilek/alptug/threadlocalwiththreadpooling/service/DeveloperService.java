@@ -16,13 +16,16 @@ public class DeveloperService {
     private final DeveloperRepository developerRepository;
     private final DeveloperTaskAssignmentMapper notOptimizedMapper;
     private final DeveloperTaskAssignmentMapper threadLocalOptimizedMapper;
+    private final DeveloperTaskAssignmentMapper servletRequestListenerMapper;
 
     public DeveloperService(@Autowired DeveloperRepository developerRepository,
                             @Autowired @Qualifier("not-optimized-developerTaskAssignment-mapper") DeveloperTaskAssignmentMapper notOptimizedMapper,
-                            @Autowired @Qualifier("thread-local-optimized-developerTaskAssignment-mapper") DeveloperTaskAssignmentMapper threadLocalOptimizedMapper) {
+                            @Autowired @Qualifier("thread-local-optimized-developerTaskAssignment-mapper") DeveloperTaskAssignmentMapper threadLocalOptimizedMapper,
+                            @Autowired @Qualifier("servlet-request-listener-developerTaskAssignment-mapper") DeveloperTaskAssignmentMapper servletRequestListenerMapper) {
         this.developerRepository = developerRepository;
         this.notOptimizedMapper = notOptimizedMapper;
         this.threadLocalOptimizedMapper = threadLocalOptimizedMapper;
+        this.servletRequestListenerMapper = servletRequestListenerMapper;
     }
 
     public List<Developer> getAllDevelopers() {
@@ -35,6 +38,10 @@ public class DeveloperService {
 
     public List<DeveloperTaskAssignmentDTO> getTaskBreakdownViaThreadLocalOptimizedMapper() {
         return developerRepository.getAllDevelopers().stream().map(threadLocalOptimizedMapper::mapDeveloper).collect(Collectors.toList());
+    }
+
+    public List<DeveloperTaskAssignmentDTO> getTaskBreakdownViaServletRequestListenerMapper() {
+        return developerRepository.getAllDevelopers().stream().map(servletRequestListenerMapper::mapDeveloper).collect(Collectors.toList());
     }
 
     public Integer assignTask(long developerId) {

@@ -34,6 +34,11 @@ public class DeveloperController {
         return developerService.getTaskBreakdownViaThreadLocalOptimizedMapper();
     }
 
+    @GetMapping("/developers/task-breakdown/servlet-request-listener-optimized")
+    public List<DeveloperTaskAssignmentDTO> getDeveloperTaskAssignmentsServletRequestListenerOptimized() {
+        return developerService.getTaskBreakdownViaServletRequestListenerMapper();
+    }
+
     @PostMapping("/developers/{id}/assignTask")
     public Integer assignTask(@PathVariable("id") long id) {
         return developerService.assignTask(id);

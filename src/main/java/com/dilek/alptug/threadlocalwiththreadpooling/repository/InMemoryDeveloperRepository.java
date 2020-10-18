@@ -28,7 +28,7 @@ public class InMemoryDeveloperRepository implements DeveloperRepository {
 
     @Override
     public List<DeveloperTaskCountBreakdown> getDeveloperTaskBreakdown() {
-        logger.info("Fetching task breakdown for all developers!");
+        logger.info("Fetching task breakdown for all developers via thread " + Thread.currentThread().getId());
 
         return DEVELOPER_TASK_COUNT_MAP.entrySet().stream().map((entry) -> new DeveloperTaskCountBreakdown(
                 entry.getKey(), entry.getValue())).collect(Collectors.toList());
