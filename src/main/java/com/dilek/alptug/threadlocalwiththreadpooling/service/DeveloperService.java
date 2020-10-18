@@ -15,11 +15,14 @@ import java.util.stream.Collectors;
 public class DeveloperService {
     private final DeveloperRepository developerRepository;
     private final DeveloperTaskAssignmentMapper notOptimizedMapper;
+    private final DeveloperTaskAssignmentMapper threadLocalOptimizedMapper;
 
     public DeveloperService(@Autowired DeveloperRepository developerRepository,
-                            @Autowired @Qualifier("not-optimized-developerTaskAssignment-mapper") DeveloperTaskAssignmentMapper notOptimizedMapper) {
+                            @Autowired @Qualifier("not-optimized-developerTaskAssignment-mapper") DeveloperTaskAssignmentMapper notOptimizedMapper,
+                            @Autowired @Qualifier("thread-local-optimized-developerTaskAssignment-mapper") DeveloperTaskAssignmentMapper threadLocalOptimizedMapper) {
         this.developerRepository = developerRepository;
         this.notOptimizedMapper = notOptimizedMapper;
+        this.threadLocalOptimizedMapper = threadLocalOptimizedMapper;
     }
 
     public List<Developer> getAllDevelopers() {
@@ -28,6 +31,10 @@ public class DeveloperService {
 
     public List<DeveloperTaskAssignmentDTO> getTaskBreakdownViaNotOptimizedMapper() {
         return developerRepository.getAllDevelopers().stream().map(notOptimizedMapper::mapDeveloper).collect(Collectors.toList());
+    }
+
+    public List<DeveloperTaskAssignmentDTO> getTaskBreakdownViaThreadLocalOptimizedMapper() {
+        return developerRepository.getAllDevelopers().stream().map(threadLocalOptimizedMapper::mapDeveloper).collect(Collectors.toList());
     }
 
     public Integer assignTask(long developerId) {

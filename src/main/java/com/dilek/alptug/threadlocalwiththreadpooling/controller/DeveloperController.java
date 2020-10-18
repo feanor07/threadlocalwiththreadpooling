@@ -29,6 +29,11 @@ public class DeveloperController {
         return developerService.getTaskBreakdownViaNotOptimizedMapper();
     }
 
+    @GetMapping("/developers/task-breakdown/thread-local-optimized")
+    public List<DeveloperTaskAssignmentDTO> getDeveloperTaskAssignmentsThreadLocalOptimized() {
+        return developerService.getTaskBreakdownViaThreadLocalOptimizedMapper();
+    }
+
     @PostMapping("/developers/{id}/assignTask")
     public Integer assignTask(@PathVariable("id") long id) {
         return developerService.assignTask(id);
